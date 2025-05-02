@@ -1,8 +1,9 @@
 #!/bin/bash
 
 BASEURL='http://localhost:3000'
+CONCURRENT_REQUESTS=100
 
-# Kills background process on script exit
+# Kills wrt background process on script early exit
 trap "exit" INT TERM
 trap "kill 0" EXIT
 
@@ -38,13 +39,13 @@ parallel_api_call_sim() {
 }
 
 run_worker_test() {
-  wrk -t12 -c100 -d10s "$BASEURL/prime/$MODE" &
+  wrk -t12 "-c${CONCURRENT_REQUESTS}" -d10s "$BASEURL/prime/$MODE" &
   sleep 2s;
   parallel_api_call_sim
 }
 
 run_single_test() {
-  wrk -t12 -c100 -d10s "$BASEURL/prime/$MODE" &
+  wrk -t12 "-c${CONCURRENT_REQUESTS}" -d10s "$BASEURL/prime/$MODE" &
   sleep 2s;
   parallel_api_call_sim
 }

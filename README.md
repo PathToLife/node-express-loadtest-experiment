@@ -1,15 +1,8 @@
 # Load Testing NodeJS. Worker Threads Experiment
 
-The server calculates fibonacci n=30 on every api call.
+A benchmark script stresses the server (using [wrk](https://formulae.brew.sh/formula/wrk)) and runs a parallel curl to see if a standard api call returns.
 
-In benchmark.sh,
-[wrk](https://formulae.brew.sh/formula/wrk) is used to stress the server, then we check to see if an standard api call returns.
-
-1. Use linux
-2. Install https://github.com/wg/wrk (If using benchmark.sh)
-3. pnpm install
-4. pnpm run start
-5. ./benchmark.sh
+The server calculates fibonacci n=30 on every api call to `GET /prime/<single|worker>`.
 
 ## Results
 
@@ -40,6 +33,17 @@ sys     0m0.004s
 Parallel Curl http://localhost:3000/hello succeeded!
 ```
 
+## Install
+
+1. Use linux
+2. Install https://github.com/wg/wrk (If using benchmark.sh)
+3. pnpm install
+4. pnpm run start
+5. ./benchmark.sh
+
+Please reduce `CONCURRENT_REQUESTS` in `benchmark.sh` if `worker` mode is timing out.
+If `single` mode is not timing out, please try increasing `CONCURRENT_REQUESTS` instead.
+
 ##  API
 
 ### GET /hello
@@ -48,7 +52,7 @@ Returns hello world. Load the server and try this route in parallel. It should r
 
 ### GET /prime/worker
 
-Running in a worker thread has a faster single shot return, however server will not timeout for other api requests
+Running in a worker thread has a slower single shot return, however server **will not timeout** for other api requests
 
 ```json
 {
@@ -61,7 +65,7 @@ Running in a worker thread has a faster single shot return, however server will 
 
 ### GET /prime/single
 
-Running in the main thread has a faster single shot return, however will timeout server if underload.
+Running in the main thread has a faster single shot return, however **will timeout** server if underload.
 
 ```json
 {
