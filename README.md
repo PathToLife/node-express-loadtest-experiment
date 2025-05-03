@@ -1,13 +1,18 @@
 # Load Testing NodeJS. Worker Threads Experiment
 
-A benchmark script stresses the server (using [wrk](https://formulae.brew.sh/formula/wrk)) and runs a parallel curl to see if a standard api call returns.
+Worker Threads Experiment in Nodejs (express server). The server calculates fibonacci n=30 on every api call to `GET /prime/<single|worker>`.
 
-The server calculates fibonacci n=30 on every api call to `GET /prime/<single|worker>`.
+A benchmark script loads the server with ~100 requests to `GET /prime/<single|worker>` (using [wrk](https://formulae.brew.sh/formula/wrk)) and then calls a standard api in parallel.
 
-## Results
+## Result Summary
 
-API routes will timeout if we try to calculate fibonacci too much on the main event loop (100 concurrent requests). Use worker threads for computationally expensive operations. The startup cost of worker threads does add an overhead, so consider experimenting with worker pools.
+When underload with an unoptimized server, API routes will timeout if we try to calculate fibonacci too much on the main event loop (100 concurrent requests). Using worker threads is confirmed to be an viable solution for computationally expensive operations. The startup cost of worker threads does add an overhead, so consider experimenting with worker pools.
 
+Using worker threads does add complexity to the build cycle. Depending on project requirements (i.e. energy and hardware limitations in portable IoT device hubs), it may be beneficial to use more performant backend stacks in compiled languages. If deveploment cost leans towards nodejs, and worker-threads aren't performant enough, then exploration of C++ addons is also an option.
+
+## Appendix
+
+### Without Worker Threads
 ```
 $ ./benchmark.sh single 
 
@@ -21,6 +26,7 @@ sys     0m0.003s
 Parallel Curl http://localhost:3000/hello failed. This means server has performance issues
 ```
 
+### With Worker Threads
 ```
 $ ./benchmark.sh worker
 
