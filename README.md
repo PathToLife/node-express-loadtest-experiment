@@ -6,9 +6,9 @@ A benchmark script loads the server with ~100 requests to `GET /prime/<single|wo
 
 ## Result Summary
 
-When underload with an unoptimized server, API routes will timeout if we try to calculate fibonacci too much on the main event loop (100 concurrent requests). Using worker threads is confirmed to be an viable solution for computationally expensive operations. The startup cost of worker threads does add an overhead, so consider experimenting with worker pools.
+When underload with an unoptimized server, API routes will timeout if we try to calculate fibonacci too much on the main event loop (100 concurrent requests). Using worker threads is confirmed to be a viable solution for computationally expensive operations. The startup cost of worker threads does add an overhead, so consider experimenting with worker pools which stay active and wait for jobs.
 
-Using worker threads does add complexity to the build cycle. Depending on project requirements (i.e. energy and hardware limitations in portable IoT device hubs), it may be beneficial to use more performant backend stacks in compiled languages. If deveploment cost leans towards nodejs, and worker-threads aren't performant enough, then exploration of C++ addons is also an option.
+Using worker threads (inclu. pools, C++ Addons) does add complexity to the build cycle. Depending on project requirements (i.e. energy and hardware limitations in portable IoT device hubs), it may be beneficial to use more performant backend stacks in compiled languages. If deveploment cost leans towards nodejs and worker-threads aren't performant enough, then exploration of C++ addons is also an option.
 
 ## Appendix
 
